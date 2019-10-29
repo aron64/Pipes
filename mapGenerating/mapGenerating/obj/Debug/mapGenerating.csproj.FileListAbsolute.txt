@@ -1,0 +1,7 @@
+D:\Dokumentumok\Prog\mapGenerating\mapGenerating\bin\Debug\mapGenerating.exe.config
+D:\Dokumentumok\Prog\mapGenerating\mapGenerating\bin\Debug\mapGenerating.exe
+D:\Dokumentumok\Prog\mapGenerating\mapGenerating\bin\Debug\mapGenerating.pdb
+D:\Dokumentumok\Prog\mapGenerating\mapGenerating\obj\Debug\mapGenerating.csprojAssemblyReference.cache
+D:\Dokumentumok\Prog\mapGenerating\mapGenerating\obj\Debug\mapGenerating.csproj.CoreCompileInputs.cache
+D:\Dokumentumok\Prog\mapGenerating\mapGenerating\obj\Debug\mapGenerating.exe
+D:\Dokumentumok\Prog\mapGenerating\mapGenerating\obj\Debug\mapGenerating.pdb
