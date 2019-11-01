@@ -10,13 +10,14 @@ public class MenuManagerScript : MonoBehaviour
 
     ///Létrehozom a három menünek a kódban lévő megfelelőjét, mint "GameObject", amikkel fogok dolgozni.
     public GameObject MainMenu, OptionsMenu, HelpMenu;
+    
     ///Létrehoztam egy publikus AudioSource ami elfogja tárolni a zenét.
     public AudioSource music;
 
     ///Az itt létrehozott nyomógomb azért szükésges mert ezzel fogom ellenőrizni, hogy a felhasználó szeretné-e a zenét hallgatni vagy inkább kikapcsolja.
     public Toggle toggle;
 
-    public static bool test = true;
+    public static bool test = false;
 
     
     ///Inicalizáció:
@@ -32,7 +33,7 @@ public class MenuManagerScript : MonoBehaviour
 
     }
     /// <summary>
-    /// Function for test driven dev - showing map for 1s, then back to main menu
+    /// TDD - a pályát látjuk 1s-ig, majd vissza a menübe
     /// </summary>
     IEnumerator TDD()
     {

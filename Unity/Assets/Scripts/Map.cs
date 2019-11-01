@@ -21,30 +21,31 @@ using UnityEngine;
 /// </summary>
 public class Map : MonoBehaviour
 {
-
-
     /// <summary>
-    /// Refers to the place maintained for the pipes, excluding the wall
+    /// A falon belül található játéktér
     /// </summary>
     public static int MapSize { get; set; }
 
+
+    public static Vector3[,] positions;
+
     /// <summary>
-    /// Blue Block Material
+    /// Kék szín
     /// </summary>
     public Material water;
 
     /// <summary>
-    /// Prefabs of an empty playfield
+    /// Prefabok az üres játéktérhez
     /// </summary>
     public GameObject PlanePrefab, CubeWall;
     
     /// <summary>
-    /// Storing the actual objects of the wall
+    /// A fal-objektumok tárolása
     /// </summary>
     List<GameObject> walls;
 
     /// <summary>
-    /// Storing the actual object of the Plane
+    /// A Plane-objektum tárolása
     /// </summary>
     GameObject MainPlane;
 
@@ -58,16 +59,12 @@ public class Map : MonoBehaviour
         if (MenuManagerScript.test) { TDD(); }
     }
     /// <summary>
-    /// Test Driven Dev, showing the map for 1s
+    /// TDD, játéktér mutatása 1mp-ig
     /// </summary>
     void TDD()
     {
-            CreateEmptyMap();
-            Destroy(MainPlane, 1f);
-            for (int i = 0; i<walls.Count; i++)
-            {
-                Destroy(walls[i], 1f);
-            }
+        CreateEmptyMap();
+        DestroyMap(1f);
     }
 
     // Update is called once per frame
@@ -77,41 +74,65 @@ public class Map : MonoBehaviour
     }
 
     /// <summary>
-    /// Generating an empty map
+    /// Üres játéktér generálása
+    /// méretnek megfelelően
     /// 
-    /// cubes: List walls;
+    /// cubes : List walls
+    /// 
     /// Plane : Gameobject MainPlane
-    /// (locals)
+    /// 
     /// </summary>
     public void CreateEmptyMap()
     {
-        // Resetting the list
+        // Új lista
         walls = new List<GameObject>();
 
-        // Scaling vector
+        // A csövek poziciókordinátáinak előkészítése
+        positions = new Vector3[MapSize,MapSize];
+
+        // Alkalmazkodás a pályamérethez - szorzó
         float scale = ((MapSize+2) / 10.0f);
 
-        // Main Plane placement
+        // A pálya elhelyezése
         MainPlane = Instantiate(PlanePrefab, new Vector3(0f, -8*scale, 3.8f*scale), Quaternion.identity);
         MainPlane.transform.localScale = new Vector3(scale, 1, scale);
 
-        // Create Wall around it's edge. (inside the square)
+        // Fal a pálya szélén, de azon belül
         for (int i = 0; i < MapSize+2; i++)
         {
             for (int j = 0; j < MapSize+2; j++)
             {
                 if ((i != 0 && i != MapSize+1) && (j != 0 && j != MapSize+1))
                 {
+                    positions[j - 1, i - 1] = new Vector3(-((MapSize + 2) / 2) +0.5f + j,
+                                                  (-8) * scale + 0.5f,
+                                                  ((3.8f * scale + ((MapSize + 2) / 2) - 0.5f) - i));
+                    
                     continue;
                 }
-                walls.Add(Instantiate(CubeWall, new Vector3(-((MapSize+2)/2)+0.5f + j,
-                                                             (-8)*scale+0.5f,
-                                                             ((3.8f * scale + ((MapSize + 2) / 2) - 0.5f) - i)), Quaternion.identity));
+                walls.Add(Instantiate(
+                                        CubeWall,
+                                        new Vector3(-((MapSize + 2) / 2) + 0.5f + j,
+                                                  (-8) * scale + 0.5f,
+                                                  ((3.8f * scale + ((MapSize + 2) / 2) - 0.5f) - i)),
+                                        Quaternion.identity ));
             }
             walls[1].GetComponents<MeshRenderer>()[0].material = water;
         }
     }
 
+    /// <summary>
+    /// A játéktér objektumainak megsemmisétése after mp után
+    /// </summary>
+    /// <param name="after">lebegőpontos szám : Másodperc</param>
+    public void DestroyMap(float after)
+    {
+        Destroy(MainPlane, after);
+        for (int i = 0; i < walls.Count; i++)
+        {
+            Destroy(walls[i], after);
+        }
+    }
 
     /// <summary>
     /// public void ShowMap - setting the objects visible

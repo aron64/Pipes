@@ -6,13 +6,8 @@ using System.Linq;
 public class GameModeOne : MonoBehaviour
 {
     public GameObject StraightPipe, TPipe, CurvedPipe, XPipe;
-    List<GameObject> pipes;
-    /*
-    public void Turn()
-    {
-        StraightPipe.transform.Rotate(0, 90, 0);
-    }*/
 
+    List<GameObject> pipes;
 
     // Start is called before the first frame update
     void Start()
@@ -43,8 +38,7 @@ public class GameModeOne : MonoBehaviour
             for (int j = 1; j < Map.MapSize+1; j++)
             {
                 GameObject NewPipe = Instantiate(Pipes[MapMatrix[i, j]], Map.positions[i-1, j-1], Quaternion.identity);
-                //foreach (Transform child in NewPipe.transform) { child.position = Map.positions[i - 1, j - 1]; }
-                if (NewPipe.name == "pipeCurved(Clone)")
+                if (NewPipe.name == CurvedPipe.name + "(Clone)")
                 {
                     NewPipe.transform.Rotate(90, 0, 0);
                 }
@@ -52,33 +46,31 @@ public class GameModeOne : MonoBehaviour
             }
         }
 
-        //foreach (var item in Map.positions)
-        //{
-        //    GameObject a = Instantiate(Pipes[Random.Range(0, 4)], item, Quaternion.identity);
-        //    foreach (Transform child in a.transform) {child.position = item;}
-        //    //CurvedPipe .transform.Rotate(90, 0,x);
-        //    //XPipe   .transform.Rotate(0, x,0);
-        //    //StraightPipe   .transform.Rotate(0, x,0);
-        //    //TPipe (0,x,0)
-        //}
+
     }
 }
+
+/// <summary>
+/// MapGen Osztály
+/// public static GenerateMap algoritmus
+/// Pályát generál.
+/// </summary>
 class MapGen
 {
     static void Main(string[] args){}
     /// <summary>
-    /// // This script generates a map for the Pipes game with a wall, 
-    /// entrance, exit and random fields with atleast 1 good path.
-    /// 0 = unchecked
-    /// 1 = wall
-    /// 2 = straight
-    /// 3 = turn
-    /// 4 = undefined
-    /// 8 = entrance (always x = 0, y = 2)
-    /// 9 = exit
+    /// Egy csőtérképet generáló algoritmus, fallal a szélén
+    /// bejárat, kijárat és random csövek, legalább 1 útvonallal
+    /// 0 = ellenőrizetlen
+    /// 1 = fal
+    /// 2 = egyenes
+    /// 3 = kanyar
+    /// 4 = meghatározatlan
+    /// 8 = bejárat (mindig x = 0, y = 2)
+    /// 9 = kijárat
     /// In the final version there are only 1,2,3,8,9
     /// </summary>
-    /// <returns>int[,] map</returns>
+    /// <returns> array[MapSize, MapSize]: int[,] map - csövek típusai</returns>
     public static int[,] GenerateMap()
     {
         

@@ -1,17 +1,14 @@
 fileFormatVersion: 2
-guid: d9663612f1b3e9c4a947998310efe9df
+guid: ac1eaf7ec39cefd49aea2481f14abea0
 ModelImporter:
   serializedVersion: 25
   internalIDToNameTable:
   - first:
-      74: 6670309620344762192
-    second: NurbsPath.001|BezierCircleAction
+      74: 5437898518847276268
+    second: NurbsPath|NurbsPathAction
   - first:
-      74: 6002846214924687293
-    second: NurbsPath.001|NurbsPathAction
-  - first:
-      74: -2541329189105954596
-    second: NurbsPath.001|NurbsPathAction.001
+      74: -8135247307853270213
+    second: NurbsPath|NurbsPathAction.001
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -41,9 +38,9 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: NurbsPath.001|BezierCircleAction
-      takeName: NurbsPath.001|BezierCircleAction
-      internalID: 6670309620344762192
+      name: NurbsPath|NurbsPathAction
+      takeName: NurbsPath|NurbsPathAction
+      internalID: 5437898518847276268
       firstFrame: 0
       lastFrame: 1
       wrapMode: 0
@@ -70,38 +67,9 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: NurbsPath.001|NurbsPathAction
-      takeName: NurbsPath.001|NurbsPathAction
-      internalID: 6002846214924687293
-      firstFrame: 0
-      lastFrame: 1
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: NurbsPath.001|NurbsPathAction.001
-      takeName: NurbsPath.001|NurbsPathAction.001
-      internalID: -2541329189105954596
+      name: NurbsPath|NurbsPathAction.001
+      takeName: NurbsPath|NurbsPathAction.001
+      internalID: -8135247307853270213
       firstFrame: 0
       lastFrame: 1
       wrapMode: 0
