@@ -9,30 +9,38 @@ public class MenuManagerScript : MonoBehaviour
     public Camera MainCam;
 
     ///Létrehozom a három menünek a kódban lévő megfelelőjét, mint "GameObject", amikkel fogok dolgozni.
-    public GameObject MainMenu,OptionsMenu,HelpMenu, MainPlane;
-
+    public GameObject MainMenu, OptionsMenu, HelpMenu;
     ///Létrehoztam egy publikus AudioSource ami elfogja tárolni a zenét.
     public AudioSource music;
 
     ///Az itt létrehozott nyomógomb azért szükésges mert ezzel fogom ellenőrizni, hogy a felhasználó szeretné-e a zenét hallgatni vagy inkább kikapcsolja.
     public Toggle toggle;
+
+    public static bool test = true;
+
     
-    /// Publikus játéktérméret
-    public static int[] MapSize { get; set; }
-
-
     ///Inicalizáció:
     ///Minden más menüt lekapcsolok és a főmenüt meg bekapcsolom
-    private void Start() {
-
-        MapSize = new int[2] { 10, 10 };
+    void Start() {
         //if(MainMenu.activeSelf != true)
         MainMenu.SetActive(true);
         OptionsMenu.SetActive(false);
         HelpMenu.SetActive(false);
-        MainPlane.SetActive(false);
-    }
 
+        if (test) {  StartCoroutine(TDD()); } 
+
+
+    }
+    /// <summary>
+    /// Function for test driven dev - showing map for 1s, then back to main menu
+    /// </summary>
+    IEnumerator TDD()
+    {
+        MainMenu.SetActive(false);
+        yield return new WaitForSeconds(1);
+        MainMenu.SetActive(true);
+        
+    }
     public void ToggleChanged()
     {
         if(toggle.isOn == true)
@@ -87,10 +95,5 @@ public class MenuManagerScript : MonoBehaviour
     public void CloseHelpMenu()
     {
         HelpMenu.SetActive(false);
-    }
-
-    public void GameModeOne()
-    {
-        MainPlane.SetActive(true);
     }
 }
