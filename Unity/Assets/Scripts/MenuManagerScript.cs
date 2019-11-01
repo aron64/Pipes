@@ -5,8 +5,11 @@ using UnityEngine.UI;
 
 public class MenuManagerScript : MonoBehaviour
 {
+    /// Adding reference for main camera
+    public Camera MainCam;
+
     ///Létrehozom a három menünek a kódban lévő megfelelőjét, mint "GameObject", amikkel fogok dolgozni.
-    public GameObject MainMenu,OptionsMenu,HelpMenu;
+    public GameObject MainMenu,OptionsMenu,HelpMenu, MainPlane;
 
     ///Létrehoztam egy publikus AudioSource ami elfogja tárolni a zenét.
     public AudioSource music;
@@ -14,14 +17,20 @@ public class MenuManagerScript : MonoBehaviour
     ///Az itt létrehozott nyomógomb azért szükésges mert ezzel fogom ellenőrizni, hogy a felhasználó szeretné-e a zenét hallgatni vagy inkább kikapcsolja.
     public Toggle toggle;
     
-    ///Ellenőrzöm, hogy az indulásnál a főmenu van-e bekapcsolva, ha nem akkor minden mást lekapcsolok és a főmenüt meg bekapcsolom
+    /// Publikus játéktérméret
+    public static int[] MapSize { get; set; }
+
+
+    ///Inicalizáció:
+    ///Minden más menüt lekapcsolok és a főmenüt meg bekapcsolom
     private void Start() {
-        if(MainMenu.active != true)
-        {
-            MainMenu.SetActive(true);
-            OptionsMenu.SetActive(false);
-            HelpMenu.SetActive(false);
-        }
+
+        MapSize = new int[2] { 10, 10 };
+        //if(MainMenu.activeSelf != true)
+        MainMenu.SetActive(true);
+        OptionsMenu.SetActive(false);
+        HelpMenu.SetActive(false);
+        MainPlane.SetActive(false);
     }
 
     public void ToggleChanged()
@@ -49,6 +58,7 @@ public class MenuManagerScript : MonoBehaviour
 
     ///A függvények a gombok kattintására végrehajtják a bennük leírtaka. 
     ///--Nyissa meg a főmenüt, zárja be a főmenüt,nyissa meg a beállítások menüt, zárja be a beállítások menüt, nyissa meg a segítség menüt, zárja be a segítség menüt.--
+    
     public void OpenMainMenu()
     {
         MainMenu.SetActive(true);
@@ -77,5 +87,10 @@ public class MenuManagerScript : MonoBehaviour
     public void CloseHelpMenu()
     {
         HelpMenu.SetActive(false);
+    }
+
+    public void GameModeOne()
+    {
+        MainPlane.SetActive(true);
     }
 }
