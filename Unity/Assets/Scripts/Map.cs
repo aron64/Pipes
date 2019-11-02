@@ -11,9 +11,11 @@ using UnityEngine;
 /// NEM ez az osztály fogja kezelni a csöveket.
 /// 
 /// Publikus komponensek:
-/// static int[] MapSize - OptionsMenu script változtatja
-/// static int[] mapShit - a balfelső sarok kordinátái egy Cube 
-///                                         méreteit beszámítva
+/// 
+/// public static int[] MapSize - OptionsMenu script változtatja
+/// 
+/// public static Vector3[,] positions
+/// 
 /// Publikus fv-k, metódusok:
 /// void CreateEmptyMap - elhelyezi az elkerítést, 
 ///                                   beleértve a csapot és a kijáratot
@@ -22,12 +24,15 @@ using UnityEngine;
 public class Map : MonoBehaviour
 {
     /// <summary>
-    /// A falon belül található játéktér
+    /// A falon belül található játéktér mérete
     /// </summary>
+    /// <remarks>ADS</remarks>
     public static int MapSize { get; set; }
 
-
-    public static Vector3[,] positions;
+    /// <summary>
+    /// A játéktér csövek számára fenntartott kordinátái
+    /// </summary>
+    public static Vector3[,] positions { get; set; }
 
     /// <summary>
     /// Kék szín
@@ -53,7 +58,6 @@ public class Map : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        MapSize = 10;//3.8+4.5=8.3
         
 
         if (MenuManagerScript.test) { TDD(); }

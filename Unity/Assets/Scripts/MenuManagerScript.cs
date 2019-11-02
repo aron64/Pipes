@@ -5,18 +5,30 @@ using UnityEngine.UI;
 
 public class MenuManagerScript : MonoBehaviour
 {
+    /// <summary>
     /// Adding reference for main camera
+    /// </summary>
     public Camera MainCam;
 
+    /// <summary>
     ///Létrehozom a három menünek a kódban lévő megfelelőjét, mint "GameObject", amikkel fogok dolgozni.
+    /// </summary>
     public GameObject MainMenu, OptionsMenu, HelpMenu;
-    
+
+
+    /// <summary>
     ///Létrehoztam egy publikus AudioSource ami elfogja tárolni a zenét.
+    /// </summary>
     public AudioSource music;
 
+    /// <summary>
     ///Az itt létrehozott nyomógomb azért szükésges mert ezzel fogom ellenőrizni, hogy a felhasználó szeretné-e a zenét hallgatni vagy inkább kikapcsolja.
+    /// </summary>
     public Toggle toggle;
 
+    /// <summary>
+    /// Set to true for TDD
+    /// </summary>
     public static bool test = false;
 
     
@@ -28,10 +40,9 @@ public class MenuManagerScript : MonoBehaviour
         OptionsMenu.SetActive(false);
         HelpMenu.SetActive(false);
 
-        if (test) {  StartCoroutine(TDD()); } 
-
-
+        if (test) {  StartCoroutine(TDD()); }
     }
+
     /// <summary>
     /// TDD - a pályát látjuk 1s-ig, majd vissza a menübe
     /// </summary>
@@ -55,44 +66,60 @@ public class MenuManagerScript : MonoBehaviour
     }
 
     private void Update() {
-        //if(toggle.isOn == true)
-        //{
-        //    music.Play();
-        //}
-        //else
-        //{
-        //    music.Stop();
-        //}
+
     }
 
-    ///A függvények a gombok kattintására végrehajtják a bennük leírtaka. 
-    ///--Nyissa meg a főmenüt, zárja be a főmenüt,nyissa meg a beállítások menüt, zárja be a beállítások menüt, nyissa meg a segítség menüt, zárja be a segítség menüt.--
     
+
+    /// <summary>
+    /// Gombok kezelése:
+    /// Nyissa meg a főmenüt
+    /// </summary>
     public void OpenMainMenu()
     {
         MainMenu.SetActive(true);
     }
 
+    /// <summary>
+    /// Gombok kezelése:
+    /// Zárja be a főmenüt
+    /// </summary>
     public void CloseMainMenu()
     {
         MainMenu.SetActive(false);
     }
 
+    /// <summary>
+    /// Gombok kezelése:
+    /// Nyissa meg a beállítások menüt
+    /// </summary>
     public void OpenOptionsMenu()
     {
         OptionsMenu.SetActive(true);
     }
 
+    /// <summary>
+    /// Gombok kezelése:
+    /// Zárja be a beállítások menüt
+    /// </summary>
     public void CloseOptionsMenu()
     {
         OptionsMenu.SetActive(false);
     }
 
+    /// <summary>
+    /// Gombok kezelése:
+    /// Nyissa meg a segítség menüt
+    /// </summary>
     public void OpenHelpMenu()
     {
         HelpMenu.SetActive(true);
     }
 
+    /// <summary>
+    /// Gombok kezelése:
+    /// Zárja be a segítség menüt
+    /// </summary>
     public void CloseHelpMenu()
     {
         HelpMenu.SetActive(false);

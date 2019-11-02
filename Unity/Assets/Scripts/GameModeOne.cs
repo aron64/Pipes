@@ -5,15 +5,35 @@ using System.Linq;
 
 public class GameModeOne : MonoBehaviour
 {
+
     public GameObject StraightPipe, TPipe, CurvedPipe, XPipe;
 
-    List<GameObject> pipes;
+    /// <summary>
+    /// Kék szín
+    /// </summary>
+    public Material water;
+    public static Material waterPub {get;set;}
+
+    /// <summary>
+    /// A Pipe csőleíró osztályból létrehozott csőmátrix. Cső.
+    /// </summary>
+    public Pipe[,] pipes;
+
+    /// <summary>
+    /// Az alsó fal i-edik eleme a kijárat
+    /// </summary>
+    public int exit;
+
+    /// <summary>
+    /// A jelenleg legenerált csövek típusa
+    /// </summary>
+    public int[,] MapMatrix;
 
     // Start is called before the first frame update
     void Start()
     {
+        waterPub = water;
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -22,31 +42,45 @@ public class GameModeOne : MonoBehaviour
     
     public void StartGame()
     {
-        GameObject[] Pipes = new GameObject[] {TPipe, XPipe, StraightPipe, CurvedPipe };
-        int[,] MapMatrix = MapGen.GenerateMap();
-        int exit;
-        pipes = new List<GameObject>();
-        for (int i = 0; i < Map.MapSize+2; i++)
+        MapMatrix = MapGen.GenerateMap();
+
+        //A jelenlegi kijárat megkeresése
+        FindExit();
+
+        //A csövek elhelyezése
+        SpawnPipes();
+
+    }
+    /// <summary>
+    /// Kijárat indexének mentése az exit változóba
+    /// </summary>
+    public void FindExit()
+    {
+        for (int i = 0; i < Map.MapSize + 2; i++)
         {
-            if (MapMatrix[i,Map.MapSize+1] == 9)
+            if (MapMatrix[i, Map.MapSize + 1] == 9)
             {
                 exit = i;
             }
         }
-        for (int i = 1; i < Map.MapSize+1; i++)
+    }
+
+    /// <summary>
+    /// A csövek elhelyezése
+    /// </summary>
+    public void SpawnPipes()
+    {
+        GameObject[] Pipes = new GameObject[] { XPipe, TPipe, StraightPipe, CurvedPipe };
+        pipes = new Pipe[Map.MapSize, Map.MapSize];
+        for (int i = 1; i < Map.MapSize + 1; i++)
         {
-            for (int j = 1; j < Map.MapSize+1; j++)
+            for (int j = 1; j < Map.MapSize + 1; j++)
             {
-                GameObject NewPipe = Instantiate(Pipes[MapMatrix[i, j]], Map.positions[i-1, j-1], Quaternion.identity);
-                if (NewPipe.name == CurvedPipe.name + "(Clone)")
-                {
-                    NewPipe.transform.Rotate(90, 0, 0);
-                }
-                pipes.Add(NewPipe);
+                GameObject pipeObj = Instantiate(Pipes[MapMatrix[i, j]], Map.positions[i - 1, j - 1], Quaternion.identity);
+                Pipe NewPipe = new Pipe(pipeObj, Pipe.PipeTypes[MapMatrix[i, j]]);
+                pipes[i - 1, j - 1] = NewPipe;
             }
         }
-
-
     }
 }
 

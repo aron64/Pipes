@@ -20,7 +20,7 @@ public class OptionsMenu : MonoBehaviour
     {
         MapSlider.minValue = 8;
         MapSlider.maxValue = 20;
-        MapSlider.value = 8;
+        MapSlider.value = 10;
         MapSlider.wholeNumbers = true;
     }
 
