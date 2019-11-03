@@ -26,8 +26,4 @@ public class StraightPipeBehaviour : MonoBehaviour
         return GetComponent<Pipe>().flowDir;
     }
 
-    void Start()
-    {
-        GetComponent<Pipe>().flowDir = new int[,] { { -1, 1 }, { 0, 0 } };
-    }
 }

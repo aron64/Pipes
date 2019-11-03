@@ -47,6 +47,8 @@ public class GameModeOne : MonoBehaviour
         //A csövek elhelyezése
         SpawnPipes();
 
+        //Init
+        PipeTurned();
     }
     /// <summary>
     /// Kijárat indexének mentése az exit változóba
@@ -86,10 +88,12 @@ public class GameModeOne : MonoBehaviour
                     case 2:
                         pipeObj.AddComponent<StraightPipeBehaviour>();
                         pipeObj.AddComponent<StraightAttachGameModeOne>();
+                        pipeObj.GetComponent<Pipe>().flowDir = new int[,] { { -1, 1 }, { 0, 0 } };
                         break;
                     case 3:
                         pipeObj.AddComponent<CurvedPipeBehaviour>();
                         pipeObj.AddComponent<CurvedAttachGameModeOne>();
+                        pipeObj.GetComponent<Pipe>().flowDir = new int[,] { { 1, 0 }, { -1, 0 } };
                         //Helyzetbe forgatjuk a síkra
                         pipeObj.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
                         break;
@@ -99,7 +103,6 @@ public class GameModeOne : MonoBehaviour
                 pipes[i - 1, j - 1] = pipeObj;
             }
         }
-        //Destroy(pipes[4, 0]);
     }
 
     /// <summary>
@@ -122,6 +125,11 @@ public class GameModeOne : MonoBehaviour
                     //Debug.Log(string.Format("{0} {1} {2} {3}", pos[0], pos[1], checkPos[0], checkPos[1]));
                     if (checkPos[0]<0 || checkPos[1]<0 || checkPos[0]>=Map.MapSize || checkPos[1] >= Map.MapSize)
                     {
+                        
+                        if (checkPos[0]==exit&& checkPos[1]==Map.MapSize)
+                        {
+                            holes.Add(new int[] { -6, -6 });
+                        }
                         continue;
                     }
                     holes.Add(checkPos.ToList().ToArray());
@@ -132,43 +140,60 @@ public class GameModeOne : MonoBehaviour
     }
     
     /// <summary>
-    /// A vízállás frissítése
+    /// Ha vége a játéknak
     /// </summary>
+    public void Won()
+    {
+        Debug.Log("Game Over");
+        //Obj destroy
+
+        //Némi animáció
+        //Vissza a menübe
+    }
+
+    /// <summary>
+    /// A vízállás frissítése rekurzívan
+    /// </summary>
+    /// <param name="nP">Következő cső</param>
+    /// <param name="deny">Előző állásba nem térünk vissza</param>
     public void WaterUpgrade(int[] nP, int[] deny)
     {
-        //if (pipes[0, 0].GetComponent<Pipe>().flowDir[1, 0] == -1)
         GameObject p = pipes[nP[0], nP[1]];
-        //AddWater(p);
-        //p.GetComponent<Pipe>().SetWater(true);
-        waterstate[nP[0], nP[1]] = water; ;
-        int[] pos =p.GetComponent<Pipe>().selfpos;
+
+        waterstate[nP[0], nP[1]] = water;
+
+        int[] pos = p.GetComponent<Pipe>().selfpos;
         int[,] fDir = p.GetComponent<Pipe>().flowDir;
         List<int[]> holes = GetHoles(pos, fDir);
         foreach (var item in holes)
         {
+            if (item[0] == -6)
+            {
+                // játék vége
+                Won();break;
+            } 
             int[] nextPos = pipes[item[0], item[1]].GetComponent<Pipe>().selfpos;
             int[,] nfDir = pipes[item[0], item[1]].GetComponent<Pipe>().flowDir;
-            //Debug.Log(nextPos[0].ToString() + nextPos[1].ToString());
-            //Debug.Log(string.Format("{0} {1} {2} {3}", nfDir[0,0], nfDir[1,0], nfDir[0,1], nfDir[1,1]));
+
             List<int[]> nHoles = GetHoles(nextPos, nfDir);
             foreach (var item1 in nHoles)
             {
-                if (item1[0] == pos[0] && item1[1] == pos[1] && (item[0]!=deny[0] || item[1]!= deny[1]))// lesz egy csunya loop && nextPos != nP)
+                if (item1[0] == pos[0] && item1[1] == pos[1] && (item[0]!=deny[0] || item[1]!= deny[1]))
                 {
-                    Debug.Log(nextPos[0].ToString() + nextPos[1].ToString());
                     WaterUpgrade(nextPos, nP);
                 }
-                Debug.Log(item1[0].ToString() +" "+ item1[1].ToString());
-                Debug.Log("eredeti: " + nP[0].ToString() + " " + nP[1].ToString());
             }
-
-            
         }
     }
 
+    /// <summary>
+    /// Minden fordítás után meghatározzuk a vizes mezőket
+    /// </summary>
     public void PipeTurned()
     {
         waterstate = new Material[Map.MapSize, Map.MapSize];
+
+        // Alapból minden elem csőszínű
         for (int i = 0; i < Map.MapSize; i++)
         {
             for (int j = 0; j < Map.MapSize; j++)
@@ -176,11 +201,14 @@ public class GameModeOne : MonoBehaviour
                 waterstate[i, j] = pipeMat;
             }
         }
-        //Debug.Log(pipes[0, 0].GetComponent<Pipe>().flowDir[1, 0]);
+
+        // Eléri a víz a rendszert?
         if (pipes[0, 0].GetComponent<Pipe>().flowDir[1, 0] == -1)
         {
             WaterUpgrade(new int[] { 0, 0 }, new int[] { -5, -5 });
         }
+
+        // A tényleges átszínezés
         for (int i = 0; i < Map.MapSize; i++)
         {
             for (int j = 0; j < Map.MapSize; j++)
@@ -188,15 +216,6 @@ public class GameModeOne : MonoBehaviour
                 pipes[i, j].GetComponent<Pipe>().SetWater(waterstate[i, j]);
             }
         }
-    }
-
-    /// <summary>
-    /// Víz materialt ad az objektumhoz
-    /// </summary>
-    /// <param name="obj">Gameobject obj</param>
-    public void AddWater(GameObject obj)
-    {
-        obj.GetComponent<MeshRenderer>().material = water;
     }
 
 }

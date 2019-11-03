@@ -32,9 +32,5 @@ public class CurvedPipeBehaviour : MonoBehaviour
         }
         return GetComponent<Pipe>().flowDir;
     }
-    void Start()
-    {
-        GetComponent<Pipe>().flowDir = new int[,] { { 1, 0 }, { -1, 0 } };
-    }
 }
 
