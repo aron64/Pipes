@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -630,13 +630,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc828a31e1f2d514c8f181119ac870fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TPipe: {fileID: -927199367670048503, guid: 1cf890ea07fdb024ca4f85c0acd39b0b, type: 3}
+  XPipe: {fileID: -927199367670048503, guid: 696e8bd6d46ac824e85b1b19b21da5ef, type: 3}
   StraightPipe: {fileID: -927199367670048503, guid: 78a819307fa9b0c43953b5dd808a46c4,
     type: 3}
-  TPipe: {fileID: -927199367670048503, guid: 1cf890ea07fdb024ca4f85c0acd39b0b, type: 3}
   CurvedPipe: {fileID: -927199367670048503, guid: ac1eaf7ec39cefd49aea2481f14abea0,
     type: 3}
-  XPipe: {fileID: -927199367670048503, guid: 696e8bd6d46ac824e85b1b19b21da5ef, type: 3}
   water: {fileID: 2100000, guid: 5fa8b37c6522c7e41bf8bf69130c50f4, type: 2}
+  pipeMat: {fileID: -6478536213147159724, guid: ac1eaf7ec39cefd49aea2481f14abea0,
+    type: 3}
   exit: 0
 --- !u!1 &1275140878
 GameObject:

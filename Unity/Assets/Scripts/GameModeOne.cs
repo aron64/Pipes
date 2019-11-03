@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
+
 public class GameModeOne : MonoBehaviour
 {
     /// <summary>
@@ -14,11 +15,14 @@ public class GameModeOne : MonoBehaviour
     /// Kék színű material
     /// </summary>
     public Material water;
-    
+    public Material pipeMat;
+    public Material[,] waterstate;
+
     /// <summary>
     /// A csöobjektumokat tároló mátrix
     /// </summary>
     public GameObject[,] pipes;
+
     
     /// <summary>
     /// Az alsó fal i-edik eleme a kijárat
@@ -75,17 +79,17 @@ public class GameModeOne : MonoBehaviour
                
                 GameObject pipeObj = Instantiate(Pipes[MapMatrix[i, j]], Map.positions[i - 1, j - 1], Quaternion.identity);
                 pipeObj.AddComponent<BoxCollider>();
+                pipeObj.AddComponent<Pipe>();
+                pipeObj.GetComponent<Pipe>().selfpos = new int[] { i - 1, j - 1 };
                 switch (MapMatrix[i, j])
                 {
                     case 2:
                         pipeObj.AddComponent<StraightPipeBehaviour>();
                         pipeObj.AddComponent<StraightAttachGameModeOne>();
-                        pipeObj.GetComponent<StraightPipeBehaviour>().selfpos = new int[] { i - 1, j - 1 };
                         break;
                     case 3:
                         pipeObj.AddComponent<CurvedPipeBehaviour>();
                         pipeObj.AddComponent<CurvedAttachGameModeOne>();
-                        pipeObj.GetComponent<CurvedPipeBehaviour>().selfpos = new int[] { i - 1, j - 1 };
                         //Helyzetbe forgatjuk a síkra
                         pipeObj.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
                         break;
@@ -95,24 +99,95 @@ public class GameModeOne : MonoBehaviour
                 pipes[i - 1, j - 1] = pipeObj;
             }
         }
+        //Destroy(pipes[4, 0]);
     }
 
     /// <summary>
-    /// Az elfordítás utáni pálya vizsgálata
+    /// Megkeresi egy pozición álló cső lehetséges folyásait
     /// </summary>
-    /// <param name="pos">Elfordított elem x,y poziciója</param>
-    /// <param name="neighbors">lehetséges csatlakozó szomszédok</param>
-    public void PipeTurned(int[] pos, int[,] neighbors)
+    /// <param name="pos">cső x,y poziciója</param>
+    /// <param name="flowDir">lehetséges folyásirányok</param>
+    /// <returns>Egy listát int[]-ben tárolt indexekkel</returns>
+    public List<int[]> GetHoles(int[] pos, int[,] flowDir)
     {
-        
+        List<int[]> holes = new List<int[]>();
+        for (int i = 0; i < 2; i++)
+        {
+            for (int j = 0; j < 2; j++)
+            {
+                if (flowDir[i,j]!=0)
+                {
+                    int[] checkPos = pos.ToList().ToArray();
+                    checkPos[i] = pos[i] + flowDir[i, j];
+                    //Debug.Log(string.Format("{0} {1} {2} {3}", pos[0], pos[1], checkPos[0], checkPos[1]));
+                    if (checkPos[0]<0 || checkPos[1]<0 || checkPos[0]>=Map.MapSize || checkPos[1] >= Map.MapSize)
+                    {
+                        continue;
+                    }
+                    holes.Add(checkPos.ToList().ToArray());
+                }
+            }
+        }
+        return holes;
     }
-
+    
     /// <summary>
     /// A vízállás frissítése
     /// </summary>
-    public void WaterUpgrade()
+    public void WaterUpgrade(int[] nP, int[] deny)
     {
+        //if (pipes[0, 0].GetComponent<Pipe>().flowDir[1, 0] == -1)
+        GameObject p = pipes[nP[0], nP[1]];
+        //AddWater(p);
+        //p.GetComponent<Pipe>().SetWater(true);
+        waterstate[nP[0], nP[1]] = water; ;
+        int[] pos =p.GetComponent<Pipe>().selfpos;
+        int[,] fDir = p.GetComponent<Pipe>().flowDir;
+        List<int[]> holes = GetHoles(pos, fDir);
+        foreach (var item in holes)
+        {
+            int[] nextPos = pipes[item[0], item[1]].GetComponent<Pipe>().selfpos;
+            int[,] nfDir = pipes[item[0], item[1]].GetComponent<Pipe>().flowDir;
+            //Debug.Log(nextPos[0].ToString() + nextPos[1].ToString());
+            //Debug.Log(string.Format("{0} {1} {2} {3}", nfDir[0,0], nfDir[1,0], nfDir[0,1], nfDir[1,1]));
+            List<int[]> nHoles = GetHoles(nextPos, nfDir);
+            foreach (var item1 in nHoles)
+            {
+                if (item1[0] == pos[0] && item1[1] == pos[1] && (item[0]!=deny[0] || item[1]!= deny[1]))// lesz egy csunya loop && nextPos != nP)
+                {
+                    Debug.Log(nextPos[0].ToString() + nextPos[1].ToString());
+                    WaterUpgrade(nextPos, nP);
+                }
+                Debug.Log(item1[0].ToString() +" "+ item1[1].ToString());
+                Debug.Log("eredeti: " + nP[0].ToString() + " " + nP[1].ToString());
+            }
 
+            
+        }
+    }
+
+    public void PipeTurned()
+    {
+        waterstate = new Material[Map.MapSize, Map.MapSize];
+        for (int i = 0; i < Map.MapSize; i++)
+        {
+            for (int j = 0; j < Map.MapSize; j++)
+            {
+                waterstate[i, j] = pipeMat;
+            }
+        }
+        //Debug.Log(pipes[0, 0].GetComponent<Pipe>().flowDir[1, 0]);
+        if (pipes[0, 0].GetComponent<Pipe>().flowDir[1, 0] == -1)
+        {
+            WaterUpgrade(new int[] { 0, 0 }, new int[] { -5, -5 });
+        }
+        for (int i = 0; i < Map.MapSize; i++)
+        {
+            for (int j = 0; j < Map.MapSize; j++)
+            {
+                pipes[i, j].GetComponent<Pipe>().SetWater(waterstate[i, j]);
+            }
+        }
     }
 
     /// <summary>
@@ -137,7 +212,8 @@ public class StraightAttachGameModeOne : MonoBehaviour
     /// </summary>
     void OnMouseDown()
     {
-        FindObjectOfType<GameModeOne>().PipeTurned(GetComponent<StraightPipeBehaviour>().selfpos, GetComponent<StraightPipeBehaviour>().Turn());
+        GetComponent<StraightPipeBehaviour>().Turn();
+        FindObjectOfType<GameModeOne>().PipeTurned();
     }
 }
 
@@ -152,7 +228,8 @@ public class CurvedAttachGameModeOne : MonoBehaviour
     /// </summary>
     void OnMouseDown()
     {
-        FindObjectOfType<GameModeOne>().PipeTurned(GetComponent<CurvedPipeBehaviour>().selfpos, GetComponent<CurvedPipeBehaviour>().Turn());
+        GetComponent<CurvedPipeBehaviour>().Turn();
+        FindObjectOfType<GameModeOne>().PipeTurned();
     }
 }
 
