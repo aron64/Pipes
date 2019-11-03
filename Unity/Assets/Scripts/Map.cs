@@ -126,6 +126,15 @@ public class Map : MonoBehaviour
     }
 
     /// <summary>
+    /// Kijelöljük grafikusan is a kijáratot
+    /// </summary>
+    /// <param name="i"></param>
+    public void SetExit(int i)
+    {
+        walls[walls.Count-(MapSize+1-i)].GetComponents<MeshRenderer>()[0].material = water;
+    }
+
+    /// <summary>
     /// A játéktér objektumainak megsemmisétése after mp után
     /// </summary>
     /// <param name="after">lebegőpontos szám : Másodperc</param>

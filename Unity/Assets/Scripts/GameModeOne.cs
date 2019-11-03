@@ -5,20 +5,21 @@ using System.Linq;
 
 public class GameModeOne : MonoBehaviour
 {
-
-    public GameObject StraightPipe, TPipe, CurvedPipe, XPipe;
+    /// <summary>
+    /// Csőfajta
+    /// </summary>
+    public GameObject  TPipe, XPipe, StraightPipe,CurvedPipe;
 
     /// <summary>
-    /// Kék szín
+    /// Kék színű material
     /// </summary>
     public Material water;
-    public static Material waterPub {get;set;}
-
+    
     /// <summary>
-    /// A Pipe csőleíró osztályból létrehozott csőmátrix. Cső.
+    /// A csöobjektumokat tároló mátrix
     /// </summary>
-    public Pipe[,] pipes;
-
+    public GameObject[,] pipes;
+    
     /// <summary>
     /// Az alsó fal i-edik eleme a kijárat
     /// </summary>
@@ -28,18 +29,10 @@ public class GameModeOne : MonoBehaviour
     /// A jelenleg legenerált csövek típusa
     /// </summary>
     public int[,] MapMatrix;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        waterPub = water;
-    }
-    // Update is called once per frame
-    void Update()
-    {
         
-    }
-    
+    /// <summary>
+    /// A játékot inicializáló funkció
+    /// </summary>
     public void StartGame()
     {
         MapMatrix = MapGen.GenerateMap();
@@ -61,33 +54,112 @@ public class GameModeOne : MonoBehaviour
             if (MapMatrix[i, Map.MapSize + 1] == 9)
             {
                 exit = i;
+                FindObjectOfType<Map>().SetExit(i);
             }
         }
     }
 
     /// <summary>
     /// A csövek elhelyezése
+    /// 
+    /// A megfelelő viselkedéskomponenseket csatoljuk a csövekhez, majd a pipes mátrixba pakoljuk őket
     /// </summary>
     public void SpawnPipes()
     {
         GameObject[] Pipes = new GameObject[] { XPipe, TPipe, StraightPipe, CurvedPipe };
-        pipes = new Pipe[Map.MapSize, Map.MapSize];
+        pipes = new GameObject[Map.MapSize, Map.MapSize];
         for (int i = 1; i < Map.MapSize + 1; i++)
         {
             for (int j = 1; j < Map.MapSize + 1; j++)
             {
+               
                 GameObject pipeObj = Instantiate(Pipes[MapMatrix[i, j]], Map.positions[i - 1, j - 1], Quaternion.identity);
-                Pipe NewPipe = new Pipe(pipeObj, Pipe.PipeTypes[MapMatrix[i, j]]);
-                pipes[i - 1, j - 1] = NewPipe;
+                pipeObj.AddComponent<BoxCollider>();
+                switch (MapMatrix[i, j])
+                {
+                    case 2:
+                        pipeObj.AddComponent<StraightPipeBehaviour>();
+                        pipeObj.AddComponent<StraightAttachGameModeOne>();
+                        pipeObj.GetComponent<StraightPipeBehaviour>().selfpos = new int[] { i - 1, j - 1 };
+                        break;
+                    case 3:
+                        pipeObj.AddComponent<CurvedPipeBehaviour>();
+                        pipeObj.AddComponent<CurvedAttachGameModeOne>();
+                        pipeObj.GetComponent<CurvedPipeBehaviour>().selfpos = new int[] { i - 1, j - 1 };
+                        //Helyzetbe forgatjuk a síkra
+                        pipeObj.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
+                        break;
+                    default:
+                        break;
+                }
+                pipes[i - 1, j - 1] = pipeObj;
             }
         }
+    }
+
+    /// <summary>
+    /// Az elfordítás utáni pálya vizsgálata
+    /// </summary>
+    /// <param name="pos">Elfordított elem x,y poziciója</param>
+    /// <param name="neighbors">lehetséges csatlakozó szomszédok</param>
+    public void PipeTurned(int[] pos, int[,] neighbors)
+    {
+        
+    }
+
+    /// <summary>
+    /// A vízállás frissítése
+    /// </summary>
+    public void WaterUpgrade()
+    {
+
+    }
+
+    /// <summary>
+    /// Víz materialt ad az objektumhoz
+    /// </summary>
+    /// <param name="obj">Gameobject obj</param>
+    public void AddWater(GameObject obj)
+    {
+        obj.GetComponent<MeshRenderer>().material = water;
+    }
+
+}
+
+/// <summary>
+/// Csatoljuk az egyenescső elforgatását a játékvezérlőhöz
+/// A csövek függetlenségét elősegítő osztály
+/// </summary>
+public class StraightAttachGameModeOne : MonoBehaviour
+{
+    /// <summary>
+    /// Elforgatjuk a csövet, és visszaadjuk a lehetséges víztovábbítás irányait a vezérlőnek
+    /// </summary>
+    void OnMouseDown()
+    {
+        FindObjectOfType<GameModeOne>().PipeTurned(GetComponent<StraightPipeBehaviour>().selfpos, GetComponent<StraightPipeBehaviour>().Turn());
+    }
+}
+
+/// <summary>
+/// Csatoljuk az görbecső elforgatását a játékvezérlőhöz
+/// A csövek függetlenségét elősegítő osztály
+/// </summary>
+public class CurvedAttachGameModeOne : MonoBehaviour
+{
+    /// <summary>
+    /// Elforgatjuk a csövet, és visszaadjuk a lehetséges víztovábbítás irányait a vezérlőnek
+    /// </summary>
+    void OnMouseDown()
+    {
+        FindObjectOfType<GameModeOne>().PipeTurned(GetComponent<CurvedPipeBehaviour>().selfpos, GetComponent<CurvedPipeBehaviour>().Turn());
     }
 }
 
 /// <summary>
 /// MapGen Osztály
-/// public static GenerateMap algoritmus
-/// Pályát generál.
+/// Pályát generál az algoritmus legalább egy útvonallal.
+/// fv: public static int[,] GenerateMap()
 /// </summary>
 class MapGen
 {
@@ -104,7 +176,7 @@ class MapGen
     /// 9 = kijárat
     /// In the final version there are only 1,2,3,8,9
     /// </summary>
-    /// <returns> array[MapSize, MapSize]: int[,] map - csövek típusai</returns>
+    /// <returns> int[MapSize+2, MapSize+2] map - csovek típussal, ki- és bejárat</returns>
     public static int[,] GenerateMap()
     {
         
