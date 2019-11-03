@@ -1,10 +1,10 @@
 var indexSectionsWithContent =
 {
-  0: "cghmnopstw",
-  1: "gmnop",
-  2: "chos",
-  3: "mptw",
-  4: "m"
+  0: "abcdefghmoprstwx",
+  1: "cgmopstx",
+  2: "bcdfghoprstw",
+  3: "adefmpstw",
+  4: "mps"
 };
 
 var indexSectionNames =
@@ -18,10 +18,10 @@ var indexSectionNames =
 
 var indexSectionLabels =
 {
-  0: "All",
-  1: "Classes",
-  2: "Functions",
-  3: "Variables",
-  4: "Properties"
+  0: "Összes",
+  1: "Osztályok",
+  2: "Függvények",
+  3: "Változók",
+  4: "Tulajdonságok"
 };
 

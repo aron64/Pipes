@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['planeprefab_32',['PlanePrefab',['../class_map.html#a193487642cc34785e129c9f05d763047',1,'Map']]]
+  ['deny_117',['deny',['../class_game_mode_two.html#a3803031263d57638b600a56f72140a0e',1,'GameModeTwo']]]
 ];

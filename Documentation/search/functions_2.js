@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['openmainmenu_27',['OpenMainMenu',['../class_menu_manager_script.html#a9288cbbdb29569bc4b69190ddc8faca4',1,'MenuManagerScript']]]
+  ['destroymap_95',['DestroyMap',['../class_map.html#a9c8d7b8ab07bdc98c77237cbf4d8ad85',1,'Map']]]
 ];
