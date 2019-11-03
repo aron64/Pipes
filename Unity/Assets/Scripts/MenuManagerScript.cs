@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Menu vezérlő
+/// </summary>
 public class MenuManagerScript : MonoBehaviour
 {
     /// <summary>
@@ -13,7 +16,7 @@ public class MenuManagerScript : MonoBehaviour
     /// <summary>
     ///Létrehozom a három menünek a kódban lévő megfelelőjét, mint "GameObject", amikkel fogok dolgozni.
     /// </summary>
-    public GameObject MainMenu, OptionsMenu, HelpMenu;
+    public GameObject mainMenu, optionsMenu, helpMenu,gameModes, exitMenuGm1, exitMenuGm2;
 
 
     /// <summary>
@@ -31,26 +34,78 @@ public class MenuManagerScript : MonoBehaviour
     /// </summary>
     public static bool test = false;
 
-    
+    /// <summary>
+    /// Játék megállítása
+    /// </summary>
+    public bool pauseActivated = false;
+
+    /// <summary>
+    /// Jelenleg futó játék
+    /// </summary>
+    public static int activeMode = 0;
+
+    /// <summary>
+    /// Float a hanerő szabályozóhoz
+    /// </summary>
+    private float musicVolume = 0.1f;
+
     ///Inicalizáció:
     ///Minden más menüt lekapcsolok és a főmenüt meg bekapcsolom
     void Start() {
         //if(MainMenu.activeSelf != true)
-        MainMenu.SetActive(true);
-        OptionsMenu.SetActive(false);
-        HelpMenu.SetActive(false);
+        music.volume = musicVolume;
+        mainMenu.SetActive(true);
+        optionsMenu.SetActive(false);
+        helpMenu.SetActive(false);
+        gameModes.SetActive(false);
+        exitMenuGm1.SetActive(false);
+        exitMenuGm2.SetActive(false);
 
         if (test) {  StartCoroutine(TDD()); }
     }
 
     /// <summary>
+    /// Szünet capture
+    /// </summary>
+    private void Update()
+    {
+        music.volume = musicVolume;
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (activeMode != 0)
+            {
+                GameObject active= new GameObject();
+                switch (activeMode)
+                {
+                    case 1:
+                        active = exitMenuGm1;
+                        break;
+                    case 2:
+                        active = exitMenuGm2;
+                        break;
+                    default:
+                        break;
+                }
+                pauseActivated = active.activeSelf;
+                if (!pauseActivated)
+                {
+                    active.SetActive(true);
+                }
+                else
+                {
+                    active.SetActive(false);
+                }
+            }
+        }
+    }
+    /// <summary>
     /// TDD - a pályát látjuk 1s-ig, majd vissza a menübe
     /// </summary>
     IEnumerator TDD()
     {
-        MainMenu.SetActive(false);
+        mainMenu.SetActive(false);
         yield return new WaitForSeconds(1);
-        MainMenu.SetActive(true);
+        mainMenu.SetActive(true);
         
     }
     public void ToggleChanged()
@@ -65,11 +120,41 @@ public class MenuManagerScript : MonoBehaviour
         }
     }
 
-    private void Update() {
-
+    /// <summary>
+    /// Zene hangerő beállítása
+    /// </summary>
+    /// <param name="vol">float 0 és 1 között</param>
+    public void SetVolume(float vol)
+    {
+        musicVolume = vol;
     }
 
-    
+
+    /// <summary>
+    /// Gombok kezelése:
+    /// Nyissa meg a JátékMódok panelt
+    /// </summary>
+    public void OpenGameModes()
+    {
+        if (gameModes.activeSelf == true)
+        {
+            gameModes.SetActive(false);
+        }
+        else
+        {
+            gameModes.SetActive(true);
+        }
+        
+    }
+
+    ///<summary>
+    /// Gombok kezelése:
+    /// Zárja be a JátékMódok panelt
+    /// </summary>
+    public void CloseGameModes()
+    {
+        gameModes.SetActive(false);
+    }
 
     /// <summary>
     /// Gombok kezelése:
@@ -77,7 +162,7 @@ public class MenuManagerScript : MonoBehaviour
     /// </summary>
     public void OpenMainMenu()
     {
-        MainMenu.SetActive(true);
+        mainMenu.SetActive(true);
     }
 
     /// <summary>
@@ -86,7 +171,7 @@ public class MenuManagerScript : MonoBehaviour
     /// </summary>
     public void CloseMainMenu()
     {
-        MainMenu.SetActive(false);
+        mainMenu.SetActive(false);
     }
 
     /// <summary>
@@ -95,7 +180,7 @@ public class MenuManagerScript : MonoBehaviour
     /// </summary>
     public void OpenOptionsMenu()
     {
-        OptionsMenu.SetActive(true);
+        optionsMenu.SetActive(true);
     }
 
     /// <summary>
@@ -104,7 +189,7 @@ public class MenuManagerScript : MonoBehaviour
     /// </summary>
     public void CloseOptionsMenu()
     {
-        OptionsMenu.SetActive(false);
+        optionsMenu.SetActive(false);
     }
 
     /// <summary>
@@ -113,7 +198,7 @@ public class MenuManagerScript : MonoBehaviour
     /// </summary>
     public void OpenHelpMenu()
     {
-        HelpMenu.SetActive(true);
+        helpMenu.SetActive(true);
     }
 
     /// <summary>
@@ -122,6 +207,40 @@ public class MenuManagerScript : MonoBehaviour
     /// </summary>
     public void CloseHelpMenu()
     {
-        HelpMenu.SetActive(false);
+        helpMenu.SetActive(false);
+    }
+
+    /// <summary>
+    /// Gombok kezelése: Lépjen vissza a játékból a főmenübe
+    /// </summary>
+    public void CloseGameModeOne()
+    {
+        mainMenu.SetActive(true);
+        exitMenuGm1.SetActive(false);
+    }
+
+    /// <summary>
+    /// Gombok kezelése: Lépjen vissza a játékból a főmenübe
+    /// </summary>
+    public void BackToPlayGM1()
+    {
+        exitMenuGm1.SetActive(false);
+    }
+
+    /// <summary>
+    /// Gombok kezelése: Lépjen vissza a játékból a főmenübe
+    /// </summary>
+    public void CloseGameModeTwo()
+    {
+        mainMenu.SetActive(true);
+        exitMenuGm2.SetActive(false);
+    }
+
+    /// <summary>
+    /// Gombok kezelése: Lépjen vissza a játékból a főmenübe
+    /// </summary>
+    public void BackToPlayGM2()
+    {
+        exitMenuGm2.SetActive(false);
     }
 }

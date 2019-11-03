@@ -121,7 +121,7 @@ public class Map : MonoBehaviour
                                                   ((3.8f * scale + ((MapSize + 2) / 2) - 0.5f) - i)),
                                         Quaternion.identity ));
             }
-            walls[1].GetComponents<MeshRenderer>()[0].material = water;
+            walls[2].GetComponents<MeshRenderer>()[0].material = water;
         }
     }
 
@@ -131,7 +131,7 @@ public class Map : MonoBehaviour
     /// <param name="i"></param>
     public void SetExit(int i)
     {
-        walls[walls.Count-(MapSize+1-i)].GetComponents<MeshRenderer>()[0].material = water;
+        walls[walls.Count-(MapSize+2-i)].GetComponents<MeshRenderer>()[0].material = water;
     }
 
     /// <summary>

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 /// <summary>
 /// Beállítások menü:
 /// Hang és Pályaméret beállítása
@@ -11,6 +12,7 @@ public class OptionsMenu : MonoBehaviour
     /// Referencia a csúszkához
     /// </summary>
     public UnityEngine.UI.Slider MapSlider;
+
     /// <summary>
     /// Referencia a Pályaméret megjelenítéséhez
     /// </summary>
@@ -19,8 +21,8 @@ public class OptionsMenu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        MapSlider.minValue = 8;
-        MapSlider.maxValue = 20;
+        MapSlider.minValue = 2;
+        MapSlider.maxValue = 100;
         MapSlider.value = 8;
         MapSlider.wholeNumbers = true;
     }

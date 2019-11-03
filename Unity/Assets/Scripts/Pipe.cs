@@ -22,6 +22,10 @@ public class Pipe : MonoBehaviour
     /// </summary>
     public bool water = false;
 
+    /// <summary>
+    /// Beállítja, hogy vizes-e a cső
+    /// </summary>
+    /// <param name="mat">Material mat</param>
     public void SetWater(Material mat)
     {
         GetComponent<MeshRenderer>().material = mat;
